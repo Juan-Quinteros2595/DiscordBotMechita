@@ -1,5 +1,6 @@
 import discord
 import os
+import webserver
 import requests
 import random
 import asyncio
@@ -351,7 +352,7 @@ async def on_message(message):
                 elif num == "11":
                     await message.channel.send("11? Chupamelo entonces.")
                 elif num == "13":
-                    await message.channel.send("13? Dijiste 13... lo dejo ahí.")
+                    await message.channel.send("13? Dijiste 13... agarrame la que me crece.")
 
 
     # Procesar comandos del bot
@@ -487,5 +488,6 @@ async def twitch(ctx):
 async def status(ctx):
     await ctx.send("Estoy funcionando perfectamente, gracias por preguntar.")
 
-# Iniciar el bot
+# Iniciar el bot y mantener activo.
+webserver.keep_alive()
 bot.run(DISCORD_TOKEN)
