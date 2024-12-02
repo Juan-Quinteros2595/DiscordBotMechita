@@ -11,7 +11,6 @@ from datetime import datetime
 import yt_dlp
 from collections import deque
 import re
-import pyttsx3
 
 # Carga del archivo .env
 load_dotenv()
@@ -422,49 +421,6 @@ async def on_ready():
     # Iniciar el recordatorio
     friday_reminder.start()
 
-
-# ====================== COMANDOS DE VOZ ======================
-
-# Configuración de pyttsx3
-engine = pyttsx3.init()
-
-# Opcional: Configurar la velocidad, volumen y voz
-engine.setProperty('rate', 150)  # Velocidad de la voz (más bajo es más lento)
-engine.setProperty('volume', 1.0)  # Volumen máximo (rango entre 0.0 y 1.0)
-voices = engine.getProperty('voices')
-engine.setProperty('voice', voices[0].id)  # Cambia entre [0] (masculino) o [1] (femenino)
-
-@bot.command(name="DeciloMechita")
-async def decilo_mechita(ctx, *, mensaje):
-    """
-    Comando para que Mechita diga algo en un canal de voz.
-    """
-    # Verifica si el autor está en un canal de voz
-    if ctx.author.voice is None:
-        await ctx.send("¡Primero debes estar en un canal de voz para usar este comando!")
-        return
-
-    # Obtén el canal de voz del autor
-    voice_channel = ctx.author.voice.channel
-
-    # Convierte el mensaje a voz y guarda el archivo
-    engine.save_to_file(mensaje, "mechita_voice.mp3")
-    engine.runAndWait()
-
-    # Únete al canal de voz y reproduce el audio
-    vc = await voice_channel.connect()
-    vc.play(discord.FFmpegPCMAudio("mechita_voice.mp3"), after=lambda e: print("Reproducción completada"))
-
-    # Espera a que el audio termine antes de desconectar
-    while vc.is_playing():
-        await asyncio.sleep(1)
-
-    # Desconéctate del canal de voz
-    await vc.disconnect()
-
-    # Limpia el archivo temporal
-    if os.path.exists("mechita_voice.mp3"):
-        os.remove("mechita_voice.mp3")
 
 
 # Comando: Apagar el bot (solo para usuarios permitidos)
